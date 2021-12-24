@@ -37,7 +37,7 @@ in_graph_entity = set()
 
 for i, head in enumerate(rel_dic):
 
-    # 构建头实体
+    # 构建头实体 加name方便看
     if head not in in_graph_entity:
         cypher += "CREATE (%s:人 {NAME:'%s'})" % (head, head) + "\n"
         in_graph_entity.add(head)
@@ -61,4 +61,17 @@ print('清图耗时:', time.time() - st)
 st = time.time()
 graph.run(cypher)
 print('建图耗时:', time.time() - st)
+
+data = defaultdict(set)
+for head in rel_dic:
+    data['entities'].add(head)
+    for rel, tail in rel_dic[head].items():
+        data['relations'].add(rel)
+        data['entities'].add(tail)
+
+# 转换成JSON serializable方便保存
+data = dict((x, list(y)) for x, y in data.items())
+
+with open(config['kg_data_path'], "w", encoding="utf8") as f:
+    f.write(json.dumps(data, ensure_ascii=False, indent=2))
 
