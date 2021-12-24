@@ -16,4 +16,4 @@ TODO
 图谱展示：
 
 
-![graph.svg](./output/graph.svg)
+![graph.png](./output/graph.png)
