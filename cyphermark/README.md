@@ -8,6 +8,8 @@ neo4j总文档:[Neo4j documentation - Neo4j Documentation](https://neo4j.com/doc
 
 # 二，目前用到的指令
 
-删除所有节点(数据)：`MATCH (n) DETACH DELETE n`
+删除所有节点：`MATCH (n) DETACH DELETE n`
 
-[build_graph.py](./assets/build_graph.py)[build_graph.py](./assets/1640255580613-build_graph.py)
+查找有限个数节点:`MATCH (n) RETURN n LIMIT 25`
+
+查找所有节点:`MATCH (n) RETURN n`
