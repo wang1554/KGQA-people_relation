@@ -81,7 +81,7 @@ eg:
 # 二，项目介绍
 
 ```bash
-│  build_graph.py  # 建图脚本
+│  builder.py  # 建图脚本
 │  config.py
 │  qa_by_template_match.py  # 问答流程脚本，流程有点复杂
 │  README.md
