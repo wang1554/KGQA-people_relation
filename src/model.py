@@ -31,4 +31,3 @@ if __name__ == '__main__':
     score_high = mo.sentence_similarity('今天吃北京烤鸭', '明天吃宫保鸡丁')
     score_low = mo.sentence_similarity('今天吃北京烤鸭', '压根不一样的句子')
     print(score_high, score_low)
-

@@ -32,14 +32,14 @@ class Builder:
         self.num_cypher = 0
         self.data = defaultdict(set)
         self.rel_dic = defaultdict(dict)
-
+        self.config = config
         # 连接图谱&创建谱图
-        self.graph = Graph(config['url'], auth=(config['user'], config['password']))
+        self.graph = Graph(self.config['url'], auth=(self.config['user'], self.config['password']))
         self.build_graph()
 
     def build_graph(self):
         # 读取数据
-        self.rel_dic = read_triplet_data(config['triplet_data_path'])
+        self.rel_dic = read_triplet_data(self.config['triplet_data_path'])
         # 生成cypher语句
         self.creat_cypher()
 
@@ -86,7 +86,7 @@ class Builder:
     def save_kg_data(self):
         # 转换成JSON serializable方便保存
         data = dict((x, list(y)) for x, y in self.data.items())
-        with open(config['kg_data_path'], "w", encoding="utf8") as f:
+        with open(self.config['kg_data_path'], "w", encoding="utf8") as f:
             f.write(json.dumps(data, ensure_ascii=False, indent=2))
 
 

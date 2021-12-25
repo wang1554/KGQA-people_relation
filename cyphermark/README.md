@@ -13,3 +13,5 @@ neo4j总文档:[Neo4j documentation - Neo4j Documentation](https://neo4j.com/doc
 查找有限个数节点:`MATCH (n) RETURN n LIMIT 25`
 
 查找所有节点:`MATCH (n) RETURN n`
+
+查找两个名字属性实体间的一层关系:`Match (n {NAME:"%ENT0%"})-[REL]->(m {NAME:"%ENT1%"}) return REL`
