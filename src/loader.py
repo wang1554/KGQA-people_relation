@@ -17,20 +17,20 @@ class Loader:
 
     # 加载图谱信息
     def load_kg_data(self, path):
-        with open(path, encoding="utf8") as f:
+        with open(path, encoding='utf8') as f:
             kg_data = json.load(f)
-        self.relations_set = set(kg_data["relations"])
-        self.entities_set = set(kg_data["entities"])
+        self.relations_set = set(kg_data['relations'])
+        self.entities_set = set(kg_data['entities'])
         return
 
     # 加载模板信息
     def load_templet(self, path):
         dataframe = pandas.read_excel(path)
         for index in range(len(dataframe)):
-            question = dataframe["question"][index]
-            cypher = dataframe["cypher"][index]
-            answer = dataframe["answer"][index]
-            check = dataframe["check"][index]
+            question = dataframe['question'][index]
+            cypher = dataframe['cypher'][index]
+            answer = dataframe['answer'][index]
+            check = dataframe['check'][index]
             self.question_templet.append([question, cypher, answer, json.loads(check)])
         return
 
@@ -43,7 +43,7 @@ def load_graph_info(config):
 if __name__ == '__main__':
     import sys
 
-    sys.path.append("..")
+    sys.path.append('..')
     from config import config
 
     config['kg_data_path'] = '../output/kg_data.json'

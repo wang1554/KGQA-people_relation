@@ -1,12 +1,5 @@
-# KGQA-people_relation
+# 基于知识图谱模板匹配的桃园三结义人物关系问答系统
 
-基于知识图谱模板匹配的桃园三结义人物关系问答系统
-
-数据来源：[老刘说NLP作者的一个仓库中的人物关系数据集](https://github.com/liuhuanyong/PersonRelationKnowledgeGraph/blob/master/EventMonitor/rel_data.txt)
-
-TODO
-
----
 
 - [X]  找数据、处理数据 -21\12\23
 - [X]  构建知识图谱 -21\12\24
@@ -14,8 +7,55 @@ TODO
 - [X]  编写问答脚本 -21\12\24
 - [X]  重构，添加一点问题，完善问答的鲁棒性 -21\12\25
 
-环境：
+# 一，项目介绍
+数据来源：[老刘说NLP作者的一个仓库中的人物关系数据集](https://github.com/liuhuanyong/PersonRelationKnowledgeGraph/blob/master/EventMonitor/rel_data.txt)
 
+## 1.原理
+> 本项目实现了知识图谱的数据录入，知识检索两块内容。首先通过结构化数据选取所需数据进行数据整合，之后构建实体-关系-实体的三元组cypher语句，最后构建问题模板进行文本匹配模式的问答。
+> 模板匹配中的语义槽选用正则抽取。
+
+## 2.项目结构
+```bash
+│  build_graph.py  # 建表脚本
+│  config.py  # 配置文件
+│  qa_by_template_match.py  # 问答接口脚本
+│  README.md
+│  requirements.txt
+│
+├─cyphermark
+│      README.md  # 一点用到的cypher语句记录
+│
+├─data
+│      rel_data.txt  # 原始的老刘说NLP作者github仓库的数据
+│      triplet_data.txt  # 处理后的桃园三结义人物关系数据
+│
+├─output
+│      graph.png  # 图谱截图
+│      kg_data.json  # 图谱节点记录
+│      template.xlsx  # 模板（目前能回答两种问题）
+│
+├─src
+│  │  answer.py  # 回答问题的类，方便添加和删除
+│  │  builder.py  # 建表的类
+│  │  loader.py  # 载入图谱节点数据
+│  │  model.py  # 规则|简单算法模型
+│  │  prepare_data.py  # 数据预处理脚本
+```
+## 3.数据展示
+> 图谱内容
+
+![](output/graph.png)
+
+> 模板内容
+
+| question                 | cypher                                                           | answer | check                 |
+| -------------------------- | ------------------------------------------------------------------ | -------- | ----------------------- |
+| %ENT0%和%ENT1%是什么关系 | Match (n {NAME:"%ENT0%"})-[REL]->(m {NAME:"%ENT1%"}) return REL  | REL    | {"%ENT%":2,"%REL%":0} |
+| %ENT0%的%REL0%是谁       | MATCH (n:人)-[:%REL0%]->(m:人) WHERE n.NAME = "%ENT0%" RETURN m | m      | {"%ENT%":1,"%REL%":1} |
+
+# 二，使用项目
+
+环境：
 ```bash
 pandas==1.2.4
 py2neo==2021.2.3
@@ -23,18 +63,6 @@ py2neo==2021.2.3
 neo4j版本：4.4.0
 jdk版本:11.0.13
 ```
-
-图谱展示(安装好环境后可以根据图谱内容进行提问)：
-
-![graph.png](./output/graph.png)
-
-问题模板展示(目前能回答这两种问题):
-
-
-| question                 | cypher                                                           | answer | check                 |
-| -------------------------- | ------------------------------------------------------------------ | -------- | ----------------------- |
-| %ENT0%和%ENT1%是什么关系 | Match (n {NAME:"%ENT0%"})-[REL]->(m {NAME:"%ENT1%"}) return REL  | REL    | {"%ENT%":2,"%REL%":0} |
-| %ENT0%的%REL0%是谁       | MATCH (n:人)-[:%REL0%]->(m:人) WHERE n.NAME = "%ENT0%" RETURN m | m      | {"%ENT%":1,"%REL%":1} |
 
 ## 1.下载
 
@@ -49,14 +77,13 @@ eg:
 三毛###贾平凹###好友
 袁买###袁熙###哥哥
 。。。
-
 ```
 
 `
 
 ## 3.运行
 
-1. 建图
+### ①.建图
 
 `python build_graph.py`
 
@@ -68,7 +95,7 @@ eg:
 共执行82条cypher语句
 ```
 
-2. 问答
+### ②.问答
 
 `python qa_by_template_match.py`
 
@@ -117,33 +144,4 @@ eg:
 请输入您想问的问题：>? 张飞和张遵什么关系
 回答:张飞的孙子是张遵 张遵的祖父是张飞
 -------------------------------
-```
-
-# 二，项目介绍
-
-```bash
-│  build_graph.py  # 建表脚本
-│  config.py  # 配置文件
-│  qa_by_template_match.py  # 问答接口脚本
-│  README.md
-│  requirements.txt
-│
-├─cyphermark
-│      README.md  # 一点用到的cypher语句记录
-│
-├─data
-│      rel_data.txt  # 原始的老刘说NLP作者github仓库的数据
-│      triplet_data.txt  # 处理后的桃园三结义人物关系数据
-│
-├─output
-│      graph.png  # 图谱截图
-│      kg_data.json  # 图谱节点记录
-│      template.xlsx  # 模板（目前能回答两种问题）
-│
-├─src
-│  │  answer.py  # 回答问题的类，方便添加和删除
-│  │  builder.py  # 建表的类
-│  │  loader.py  # 载入图谱节点数据
-│  │  model.py  # 规则|简单算法模型
-│  │  prepare_data.py  # 数据预处理脚本
 ```

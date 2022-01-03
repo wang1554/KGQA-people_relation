@@ -16,7 +16,7 @@ def get_triplet_data(config):
 if __name__ == '__main__':
     import sys
 
-    sys.path.append("..")
+    sys.path.append('..')
     from config import config
 
     config['row_data_path'] = '../data/rel_data.txt'

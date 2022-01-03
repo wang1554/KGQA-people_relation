@@ -8,7 +8,7 @@ from src.answer import Answer
 
 class GraphQA:
     def __init__(self, config):
-        self.graph = Graph("http://localhost:7474", auth=("neo4j", "123456"))
+        self.graph = Graph('http://localhost:7474', auth=('neo4j', '123456'))
         self.entities_set, self.relations_set, self.question_templet = load_graph_info(config)
         self.model = Model()
         self.answer = Answer()
